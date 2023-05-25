@@ -1,21 +1,27 @@
-﻿@{
+﻿@model LoginModel
+@{
 	ViewData["Title"] = "Login";
 }
 <div class="row">
 	<div class="col-4 offset-4">
-        <form>
+		<div asp-validation-summary="ModelOnly" class="text-danger small">
+        </div>
+
+        <form method="post" asp-action="Login">
             <div class="form-group mb-4">
-                <label class="form-label" for="form2Example1">Email address</label>
-                <input type="email" id="form2Example1" class="form-control" />               
+                <label class="form-label" for="form2Example1">Username</label>
+                <input type="text" asp-for="Username" class="form-control" />        
+                <span asp-validation-for="Username" class="text-danger small"></span>
             </div>
 
             <div class="form-group mb-4">
                 <label class="form-label" for="form2Example2">Password</label>
-                <input type="password" id="form2Example2" class="form-control" />            
+                <input type="password" asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
             </div>
 
             <div class="form-group d-grid mb-4">
-                <button type="button" class="btn btn-primary btn-block "><i class="fa-solid fa-right-to-bracket"></i>Login</button>
+                <button type="submit" class="btn btn-primary btn-block "><i class="fa-solid fa-right-to-bracket"></i>Login</button>
             </div>         
         </form>
     </div>
