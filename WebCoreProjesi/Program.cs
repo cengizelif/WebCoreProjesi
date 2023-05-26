@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using WebCoreProjesi.Models;
+
 namespace WebCoreProjesi
 {
     public class Program
@@ -8,6 +12,21 @@ namespace WebCoreProjesi
 
             // Add services to the container.
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            builder.Services.AddDbContext<DatabaseContext>(opt =>
+            {
+                opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                //opt.UseLazyLoadingProxies();
+            });
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
+            {
+                opt.Cookie.Name = "UserAuthenticate";
+                opt.ExpireTimeSpan = TimeSpan.FromDays(1);
+                opt.SlidingExpiration = false;
+                opt.LoginPath = "/Account/Login";
+            });
+
 
             var app = builder.Build();
 
@@ -25,6 +44,7 @@ namespace WebCoreProjesi
             app.UseRouting();
 
             app.UseAuthorization();
+           // app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",
