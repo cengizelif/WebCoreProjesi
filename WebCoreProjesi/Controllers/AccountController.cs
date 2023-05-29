@@ -129,11 +129,76 @@ namespace WebCoreProjesi.Controllers
             return sifre;
         }
 
-        public IActionResult Profile()
+        public User UserFind()
         {
-            return View();
+			Guid userid = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+			return  _db.Users.Find(userid);
+		}
+        public IActionResult Profile()
+		{
+	    	ProfilBilgileri();
+
+			return View();
+		}
+
+		private void ProfilBilgileri()
+		{
+			User user = UserFind();
+			ViewData["ad"] = user.Name;
+			ViewData["soyad"] = user.Surname;
+			ViewData["kullanıcı"] = user.UserName;
+			ViewData["email"] = user.Email;
+			ViewData["şifre"] = user.Password;
+		}
+
+		[HttpPost]
+        public IActionResult AdKaydet(string ad)
+        {
+			User user = UserFind();
+            user.Name = ad;
+            _db.SaveChanges();
+
+			return RedirectToAction("Profile");
         }
-        public IActionResult Logout()
+
+		[HttpPost]
+		public IActionResult SoyadKaydet(string soyad)
+		{
+			User user = UserFind();
+            user.Surname = soyad;
+            _db.SaveChanges();
+
+			return RedirectToAction("Profile");
+		}
+
+
+		[HttpPost]
+		public IActionResult UserNameSave(string username)
+		{
+			User user = UserFind();
+
+			User kullanici1 = _db.Users.FirstOrDefault(x => x.UserName ==username && x.Id!=user.Id);
+
+			if (kullanici1 != null)
+			{
+				ModelState.AddModelError("Username", "Bu kullanıcı adı kayıtlı");
+                ProfilBilgileri();
+                return View("Profile");
+			}
+
+            user.UserName = username;
+            _db.SaveChanges();
+
+			return RedirectToAction("Profile");
+		}
+
+		
+
+
+
+
+
+		public IActionResult Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");

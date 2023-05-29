@@ -1,0 +1,53 @@
+﻿@{
+	ViewData["Title"] = "Profile";
+}
+
+<div class="row">
+	<div class="col-4 ">
+		@ViewData["Title"]
+		</div>
+</div>
+<hr />
+<div class="row">
+	<div class="col-4">
+		<div>
+			<div asp-validation-summary="All" class="text-danger"></div>
+		</div>
+
+		<form method="post" action="AdKaydet">
+			<div class="input-group mb-3">
+				<input name="ad" type="text" class="form-control" placeholder="Ad" value="@ViewData["ad"]">
+				<button class="btn btn-outline-secondary" type="submit" id="button-addon2">Kaydet</button>
+			</div>
+		</form>
+
+		<form method="post" action="SoyadKaydet">		
+		<div class="input-group mb-3">
+				<input name="soyad" type="text" class="form-control" placeholder="Soyad" value="@ViewData["soyad"]">
+			<button class="btn btn-outline-secondary" type="submit" id="button-addon2">Kaydet</button>
+		</div>
+		</form>
+
+		<form method="post" action="UserNameSave">
+			<div class="input-group mb-3">
+				<input name="username" type="text" class="form-control" placeholder="Kullanıcı Adı" value="@ViewData["kullanıcı"]">
+				<button class="btn btn-outline-secondary" type="submit" id="button-addon2">Kaydet</button>
+			</div>
+		</form>
+
+		<form method="post">
+			<div class="input-group mb-3">
+				<input type="text" class="form-control" placeholder="Email" value="@ViewData["email"]">
+				<button class="btn btn-outline-secondary" type="submit" id="button-addon2">Kaydet</button>
+			</div>
+		</form>
+
+		<form method="post">
+			<div class="input-group mb-3">
+				<input type="password" class="form-control" placeholder="Şifre" value="@ViewData["şifre"]">
+				<button class="btn btn-outline-secondary" type="submit" id="button-addon2">Kaydet</button>
+			</div>
+		</form>
+
+	</div>
+</div>

@@ -26,7 +26,7 @@ namespace WebCoreProjesi
                 opt.SlidingExpiration = false;
                 opt.LoginPath = "/Account/Login";
                 opt.LogoutPath = "/Account/Logout";
-                opt.AccessDeniedPath = "/Home/Error";
+                opt.AccessDeniedPath = "/Home/AccessDenied";
             });
 
 
