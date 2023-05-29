@@ -10,5 +10,6 @@ namespace WebCoreProjesi.Models
         }
 
         public  DbSet<User> Users { get; set; }
+        public  DbSet<Kategori> Kategoriler { get; set; }
     }
 }

@@ -48,6 +48,7 @@ namespace WebCoreProjesi.Controllers
                     List<Claim> claims = new List<Claim>();
                     claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
                     claims.Add(new Claim(ClaimTypes.Name,user.Name??string.Empty));
+                    claims.Add(new Claim(ClaimTypes.Role, user.Role));
                     claims.Add(new Claim("UserName", user.UserName));
 
                     ClaimsPrincipal principal=new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme)); 
@@ -56,7 +57,10 @@ namespace WebCoreProjesi.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-
+                else
+                {
+                    ModelState.AddModelError("", "Kullanıcı adı yada şifre hatalı");
+                }
             }
             return View(model);
         }
@@ -73,16 +77,24 @@ namespace WebCoreProjesi.Controllers
         {
             if (ModelState.IsValid)
             {
-                User kullanici=_db.Users.FirstOrDefault(x=>x.UserName==model.Username && x.Email==model.Email);
+                User kullanici1=_db.Users.FirstOrDefault(x=>x.UserName==model.Username);
 
-                if(kullanici!=null)
+                User kullanici2 = _db.Users.FirstOrDefault(x => x.Email == model.Email);
+
+                if(kullanici1!=null)
                 {
-                    if(kullanici.UserName==model.Username)
-                        ModelState.AddModelError("Username", "Bu kullanıcı adı kayıtlı");
-                    if (kullanici.Email == model.Email)
-                        ModelState.AddModelError("Email", "Bu email kayıtlı");
+                    ModelState.AddModelError("Username", "Bu kullanıcı adı kayıtlı");
+                }
+                if (kullanici2!=null)
+                {
+                    ModelState.AddModelError("Email", "Bu email kayıtlı");
+                    
+                }    
+                if(kullanici1 != null || kullanici2!=null) 
+                {
                     return View(model);
                 }
+
 
                 string sifre = StringHashed(model.Password);
 
@@ -92,7 +104,8 @@ namespace WebCoreProjesi.Controllers
                     Email = model.Email,
                     Password = sifre,
                     CreateDate = DateTime.Now,
-                    Aktivate = true
+                    Aktivate = true,
+                    Role="user"
                 };
                 _db.Users.Add(user);
                 int sonuc = _db.SaveChanges();
