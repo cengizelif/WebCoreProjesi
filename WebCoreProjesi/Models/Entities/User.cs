@@ -29,5 +29,10 @@ namespace WebCoreProjesi.Models.Entities
         public string Password { get; set; }
         public bool Aktivate { get; set; }
         public DateTime CreateDate { get; set; }
+
+        [StringLength(20)]
+        [Required]
+        public string Role { get; set; } = "user";
+
     }
 }

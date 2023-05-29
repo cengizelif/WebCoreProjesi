@@ -25,6 +25,8 @@ namespace WebCoreProjesi
                 opt.ExpireTimeSpan = TimeSpan.FromDays(1);
                 opt.SlidingExpiration = false;
                 opt.LoginPath = "/Account/Login";
+                opt.LogoutPath = "/Account/Logout";
+                opt.AccessDeniedPath = "/Home/Error";
             });
 
 
@@ -43,6 +45,7 @@ namespace WebCoreProjesi
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
            // app.UseSession();
 

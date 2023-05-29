@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NETCore.Encrypt.Extensions;
 using System.Security.Claims;
@@ -8,6 +9,7 @@ using WebCoreProjesi.Models.Entities;
 
 namespace WebCoreProjesi.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly DatabaseContext _db;
@@ -19,11 +21,13 @@ namespace WebCoreProjesi.Controllers
             _configuration = configuration;
         }
 
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult Login(LoginModel model)
         {
@@ -57,16 +61,29 @@ namespace WebCoreProjesi.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
+                User kullanici=_db.Users.FirstOrDefault(x=>x.UserName==model.Username && x.Email==model.Email);
+
+                if(kullanici!=null)
+                {
+                    if(kullanici.UserName==model.Username)
+                        ModelState.AddModelError("Username", "Bu kullanıcı adı kayıtlı");
+                    if (kullanici.Email == model.Email)
+                        ModelState.AddModelError("Email", "Bu email kayıtlı");
+                    return View(model);
+                }
+
                 string sifre = StringHashed(model.Password);
 
                 User user = new User()
@@ -105,7 +122,8 @@ namespace WebCoreProjesi.Controllers
         }
         public IActionResult Logout()
         {
-            return View();
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
         }
     }
 }
