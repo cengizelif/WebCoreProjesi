@@ -4,13 +4,14 @@
 
 <div class="row">
 	<div class="col-4 ">
-		@ViewData["Title"]
+		@ViewData["Title"]		
 		</div>
 </div>
 <hr />
 <div class="row">
 	<div class="col-4">
 		<div>
+			<input type="hidden" value="@ViewData["mesaj"]" id="mesaj"/>		
 			<div asp-validation-summary="All" class="text-danger"></div>
 		</div>
 
@@ -35,19 +36,30 @@
 			</div>
 		</form>
 
-		<form method="post">
+		<form method="post" action="EmailKaydet">
 			<div class="input-group mb-3">
-				<input type="text" class="form-control" placeholder="Email" value="@ViewData["email"]">
+				<input name="Email" type="text" class="form-control" placeholder="Email" value="@ViewData["email"]">
 				<button class="btn btn-outline-secondary" type="submit" id="button-addon2">Kaydet</button>
 			</div>
 		</form>
 
-		<form method="post">
+		<form method="post" action="SifreKaydet">
 			<div class="input-group mb-3">
-				<input type="password" class="form-control" placeholder="Şifre" value="@ViewData["şifre"]">
+				<input name="sifre" type="password" class="form-control" placeholder="Şifre" value="@ViewData["şifre"]">
 				<button class="btn btn-outline-secondary" type="submit" id="button-addon2">Kaydet</button>
 			</div>
 		</form>
 
 	</div>
 </div>
+@section Scripts{
+
+		@if (ViewData["mesaj"] != null)
+		{
+		<script>
+			var mesaj =$("#mesaj").val();
+			toastr["success"](mesaj, "")
+		   </script>
+		}	
+	
+}
