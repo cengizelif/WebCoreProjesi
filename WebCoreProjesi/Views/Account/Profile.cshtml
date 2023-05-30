@@ -1,5 +1,5 @@
 ﻿@{
-	ViewData["Title"] = "Profile";
+	ViewData["Title"] = "Profile Bilgileri";
 }
 
 <div class="row">
@@ -9,7 +9,19 @@
 </div>
 <hr />
 <div class="row">
-	<div class="col-4">
+	<div class="col-3">
+		<form method="post" action="ProfilResimKaydet" enctype="multipart/form-data">
+			<div class="text-center mb-3">
+				<img src="~/image/@ViewData["resim"]" class="img-thumbnail rounded-circle" w-100 h-100 />
+			</div>
+			<div class="input-group mb-3">
+				<input name="resim" type="file" class="form-control">
+				<button class="btn btn-outline-secondary" type="submit" id="button-addon2">Kaydet</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="col-6 offset-sm-2">
 		<div>
 			<input type="hidden" value="@ViewData["mesaj"]" id="mesaj"/>		
 			<div asp-validation-summary="All" class="text-danger"></div>
@@ -58,7 +70,7 @@
 		{
 		<script>
 			var mesaj =$("#mesaj").val();
-			toastr["success"](mesaj, "")
+			toastr["success"](mesaj,"")
 		   </script>
 		}	
 	

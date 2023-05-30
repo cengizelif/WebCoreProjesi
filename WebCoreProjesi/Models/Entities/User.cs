@@ -34,5 +34,8 @@ namespace WebCoreProjesi.Models.Entities
         [Required]
         public string Role { get; set; } = "user";
 
+        [StringLength(255)]
+        public string ProfilImageFileName { get; set; }
+
     }
 }

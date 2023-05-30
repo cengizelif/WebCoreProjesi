@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NETCore.Encrypt.Extensions;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using WebCoreProjesi.Models;
 using WebCoreProjesi.Models.Entities;
@@ -105,7 +106,8 @@ namespace WebCoreProjesi.Controllers
 					Password = sifre,
 					CreateDate = DateTime.Now,
 					Aktivate = true,
-					Role = "user"
+					Role = "user",
+					ProfilImageFileName= "noimage.jpg"
 				};
 				_db.Users.Add(user);
 				int sonuc = _db.SaveChanges();
@@ -149,6 +151,7 @@ namespace WebCoreProjesi.Controllers
 			ViewData["kullanıcı"] = user.UserName;
 			ViewData["email"] = user.Email;
 			ViewData["şifre"] = user.Password;
+			ViewData["resim"] = user.ProfilImageFileName;
 		}
 
 		[HttpPost]
@@ -159,7 +162,8 @@ namespace WebCoreProjesi.Controllers
 			_db.SaveChanges();
 			ViewData["mesaj"] = "Ad kaydedildi";
 
-			return RedirectToAction(nameof(Profile));
+			ProfilBilgileri();
+			return View(nameof(Profile));
 		}
 
 		[HttpPost]
@@ -170,7 +174,8 @@ namespace WebCoreProjesi.Controllers
 			_db.SaveChanges();
 			ViewData["mesaj"] = "Soyad kaydedildi";
 
-			return RedirectToAction(nameof(Profile));
+			ProfilBilgileri();
+			return View(nameof(Profile));
 		}
 
 
@@ -193,8 +198,7 @@ namespace WebCoreProjesi.Controllers
 				user.UserName = username;
 				_db.SaveChanges();
 				ViewData["mesaj"] = "Kullanıcı adı kaydedildi";
-
-				return RedirectToAction("Profile");
+				
 			}
 			ProfilBilgileri();
 			return View(nameof(Profile));
@@ -227,20 +231,52 @@ namespace WebCoreProjesi.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult SifreKaydet(string sifre)
+		public IActionResult SifreKaydet([MinLength(6),MaxLength(16)]string sifre)
 		{
 			if (ModelState.IsValid)
 			{
 				User user = UserFind();
 
-				user.Password =StringHashed(sifre);
-				_db.SaveChanges();
+				if(_db.Users.Any(x=>x.Password!=sifre && x.Id==user.Id))
+				{
+                  user.Password =StringHashed(sifre);
+				  _db.SaveChanges();
+				}
+				
 				ViewData["mesaj"] = "Şifre kaydedildi";
 			}
 
 			ProfilBilgileri();
 			return View(nameof(Profile));
 		}
+
+
+		[HttpPost]
+		public IActionResult ProfilResimKaydet(IFormFile resim)
+		{
+			if (ModelState.IsValid)
+			{
+				User user = UserFind();
+
+				string dosyaadi = user.Id + ".jpg";
+
+				Stream dosya = new FileStream("wwwroot/image/" + dosyaadi, FileMode.OpenOrCreate);
+
+				resim.CopyTo(dosya);
+				dosya.Close();
+				dosya.Dispose();		
+
+				if(System.IO.File.Exists("wwwroot/image/" + dosyaadi))
+				{
+	               user.ProfilImageFileName = dosyaadi;
+				  _db.SaveChanges();
+				}	
+			}
+			ProfilBilgileri();
+			return View(nameof(Profile));
+		}
+
+
 
 		public IActionResult Logout()
 		{
