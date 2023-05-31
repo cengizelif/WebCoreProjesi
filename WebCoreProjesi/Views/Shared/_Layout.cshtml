@@ -32,12 +32,16 @@
                         {
                             if(User.IsInRole("admin"))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Kategori" asp-action="Index">Kategoriler</a>
-                                </li>                                
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link text-dark dropdown-toggle" asp-area="" asp-controller="Home" asp-action="Index" data-bs-toggle="dropdown" aria-expanded="false">Yönetici</a>                          
+                                    <ul class="dropdown-menu">
+                                        <li><a class="nav-link text-dark" asp-area="" asp-controller="Kategori" asp-action="Index">Kategoriler</a></li>
+                                        <li><a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Kullanıcılar</a></li>                   
+                                    </ul>
+                                </li>                            
                             }
                             <li class="nav-item ms-auto">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile"><i class="fa-solid fa-user"></i>Profile</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile"><i class="fa-solid fa-user"></i>@User.FindFirst("UserName").Value</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-right-to-bracket"></i>Logout</a>

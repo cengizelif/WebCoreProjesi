@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using WebCoreProjesi.Models;
 
 namespace WebCoreProjesi
@@ -12,6 +13,8 @@ namespace WebCoreProjesi
 
             // Add services to the container.
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             builder.Services.AddDbContext<DatabaseContext>(opt =>
             {
